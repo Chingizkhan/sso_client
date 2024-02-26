@@ -4,7 +4,6 @@ import (
 	"github.com/Chingizkhan/sso_client/pkg/api_util"
 	"github.com/Chingizkhan/sso_client/pkg/token"
 	"github.com/Chingizkhan/sso_client/usecase/oauth_oidc"
-
 	"log"
 	"net/http"
 )
