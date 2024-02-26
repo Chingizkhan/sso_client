@@ -7,6 +7,10 @@ import (
 	"log"
 )
 
+const (
+	tokenIntrospectURL = "/client-credentials/token/introspect"
+)
+
 type (
 	UseCase struct {
 		client sso_service_client.Client
