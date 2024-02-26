@@ -1,4 +1,4 @@
-package client
+package sso_service_client
 
 type (
 	IntrospectResponse struct {

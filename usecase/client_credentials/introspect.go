@@ -3,7 +3,6 @@ package client_credentials
 import (
 	"context"
 	"fmt"
-	"github.com/Chingizkhan/sso_client/service/client"
 	"log"
 )
 
@@ -12,7 +11,7 @@ const (
 )
 
 func Introspect(ctx context.Context, accessToken string) error {
-	introspect, err := client.OauthClient.Introspect(ctx, tokenIntrospectURL, accessToken)
+	introspect, err := sso_serviec_client.OauthClient.Introspect(ctx, tokenIntrospectURL, accessToken)
 	if err != nil {
 		return fmt.Errorf("OauthClient.Introspect: %w", err)
 	}

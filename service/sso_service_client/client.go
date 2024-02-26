@@ -1,10 +1,9 @@
-package client
+package sso_service_client
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/Chingizkhan/sso_client/config"
 	"github.com/Chingizkhan/sso_client/pkg/token"
 	"github.com/pkg/errors"
 	"io"
@@ -13,15 +12,16 @@ import (
 	"time"
 )
 
-var OauthClient *OauthServiceClient
-
-func init() {
-	OauthClient = New(time.Second*15, config.Cfg.OauthService.Addr)
-}
+//
+//var OauthClient *OauthServiceClient
+//
+//func init() {
+//	OauthClient = New(time.Second*15, config.Cfg.OauthService.Addr)
+//}
 
 type (
 	Client interface {
-		Introspect(ctx context.Context, path, accessToken string) (IntrospectResponse, error)
+		Introspect(ctx context.Context, path, accessToken string) (*IntrospectResponse, error)
 	}
 
 	OauthServiceClient struct {

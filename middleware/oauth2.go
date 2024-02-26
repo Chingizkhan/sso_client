@@ -12,15 +12,11 @@ func AuthOauth2(in OauthIn) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			// check token exists
-			accessToken, err := token.FromHttpRequest(r)
-			if err != nil {
-				api_util.RenderErrorResponse(w, err.Error(), http.StatusUnauthorized)
-				return
-			}
+			accessToken := token.FromHttpRequest(r)
 			log.Println("accessToken", accessToken)
 			if accessToken == "" {
 				// return login page
-				loginURL, err := oauth_oidc.LoginFlow(w, r, in.CookieSecret)
+				loginURL, err := oauth_oidc.LoginFlow(w, in.CookieSecret)
 				if err != nil {
 					api_util.RenderErrorResponse(w, "can not show login flow", http.StatusInternalServerError)
 					return
