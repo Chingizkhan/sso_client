@@ -15,7 +15,12 @@ import (
 )
 
 type (
-	Client struct {
+	Client interface {
+		AuthOauth2(next http.Handler) http.Handler
+		AuthClientCredentials(next http.Handler) http.Handler
+	}
+
+	SsoClient struct {
 		cfg               Config
 		oidc              OauthOidc
 		clientCredentials ClientCredentials
@@ -30,7 +35,7 @@ type (
 	}
 )
 
-func New(config Config) *Client {
+func New(config Config) *SsoClient {
 	//oauth2Config := oauth2.Config{
 	//	ClientID:     "38b36b9d-48a8-40fd-9911-ee4462428c58",
 	//	ClientSecret: "mysecret",
@@ -46,7 +51,7 @@ func New(config Config) *Client {
 	oidc := oauth_oidc.New(config.OauthAddr, cookieProcessor, ssoServiceClient, config.Oauth2Config)
 	clientCredentials := client_credentials.New(ssoServiceClient)
 
-	return &Client{
+	return &SsoClient{
 		cfg:               config,
 		oidc:              oidc,
 		clientCredentials: clientCredentials,
@@ -54,7 +59,7 @@ func New(config Config) *Client {
 	}
 }
 
-func (c *Client) AuthOauth2(next http.Handler) http.Handler {
+func (c *SsoClient) AuthOauth2(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		// check token exists
 		accessToken := token.FromHttpRequest(r)
@@ -87,7 +92,7 @@ func (c *Client) AuthOauth2(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func (c *Client) AuthClientCredentials(next http.Handler) http.Handler {
+func (c *SsoClient) AuthClientCredentials(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		// check token exists
 		accessToken := token.FromHttpRequest(r)
