@@ -1,0 +1,11 @@
+app:
+  name: 'sso_client'
+  version: '1.0.0'
+
+cookie:
+  secret: 'secret'
+
+oauth_service:
+  addr: 'http://localhost:8081'
+  client_id: '38b36b9d-48a8-40fd-9911-ee4462428c58'
+  client_secret: 'mysecret'
