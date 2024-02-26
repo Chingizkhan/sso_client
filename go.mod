@@ -1,4 +1,4 @@
-module sso_client
+module github.com/Chingizkhan/sso_client
 
 go 1.21
 

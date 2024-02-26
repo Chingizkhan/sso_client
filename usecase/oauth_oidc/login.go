@@ -2,10 +2,10 @@ package oauth_oidc
 
 import (
 	"fmt"
+	"github.com/Chingizkhan/sso_client/pkg/cookies"
+	"github.com/Chingizkhan/sso_client/pkg/state"
+	"github.com/Chingizkhan/sso_client/service/oauth"
 	"net/http"
-	"sso_client/pkg/cookies"
-	"sso_client/pkg/state"
-	"sso_client/service/oauth"
 	"time"
 )
 

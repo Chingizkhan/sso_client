@@ -3,8 +3,8 @@ package oauth_oidc
 import (
 	"context"
 	"fmt"
+	"github.com/Chingizkhan/sso_client/service/client"
 	"log"
-	"sso_client/service/client"
 )
 
 const (

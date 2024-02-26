@@ -4,11 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Chingizkhan/sso_client/config"
+	"github.com/Chingizkhan/sso_client/pkg/token"
 	"github.com/pkg/errors"
 	"io"
 	"net/http"
-	"sso_client/config"
-	"sso_client/pkg/token"
 	"strings"
 	"time"
 )

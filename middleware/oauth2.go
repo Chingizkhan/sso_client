@@ -1,11 +1,11 @@
 package middleware
 
 import (
+	"github.com/Chingizkhan/sso_client/pkg/api_util"
+	"github.com/Chingizkhan/sso_client/pkg/token"
+	"github.com/Chingizkhan/sso_client/usecase/oauth_oidc"
 	"log"
 	"net/http"
-	"sso_client/pkg/api_util"
-	"sso_client/pkg/token"
-	"sso_client/usecase/oauth_oidc"
 )
 
 func AuthOauth2(secret []byte) func(http.Handler) http.Handler {
