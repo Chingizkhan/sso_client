@@ -13,7 +13,7 @@ var (
 	CookieName = "oauth_state"
 )
 
-func LoginFlow(w http.ResponseWriter, r *http.Request, secret []byte) (string, error) {
+func LoginFlow(w http.ResponseWriter, r *http.Request, secret string) (string, error) {
 	st, err := state.Generate()
 	if err != nil {
 		return "", fmt.Errorf("state.Generate: %w", err)
@@ -30,7 +30,7 @@ func LoginFlow(w http.ResponseWriter, r *http.Request, secret []byte) (string, e
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
 	}
-	err = cookies.WriteSigned(w, cookie, secret)
+	err = cookies.WriteSigned(w, cookie, []byte(secret))
 	if err != nil {
 		return "", fmt.Errorf("cookies.WriteSigned: %w", err)
 	}
