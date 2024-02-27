@@ -52,7 +52,7 @@ func New(config Config) *SsoClient {
 	//}
 	cookieProcessor := cookie_processor.New(config.CookieLifetime)
 	ssoServiceClient := sso_service_client.New(time.Second*15, config.OauthAddr)
-	oidc := oauth_oidc.New(config.OauthAddr, cookieProcessor, ssoServiceClient, config.Oauth2Config)
+	oidc := oauth_oidc.New(cookieProcessor, ssoServiceClient, config.Oauth2Config)
 	clientCredentials := client_credentials.New(ssoServiceClient)
 
 	return &SsoClient{

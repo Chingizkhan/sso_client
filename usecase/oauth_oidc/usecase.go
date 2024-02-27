@@ -21,17 +21,15 @@ type (
 	}
 
 	UseCase struct {
-		addr         string
 		cookie       CookieProcessor
 		client       sso_service_client.Client
 		oauth2Config oauth2.Config
 	}
 )
 
-func New(addr string, cookie CookieProcessor, client sso_service_client.Client, oauth2Config oauth2.Config) *UseCase {
+func New(cookie CookieProcessor, client sso_service_client.Client, oauth2Config oauth2.Config) *UseCase {
 	return &UseCase{
 		cookie:       cookie,
-		addr:         addr,
 		client:       client,
 		oauth2Config: oauth2Config,
 	}
@@ -50,7 +48,7 @@ func (u *UseCase) Login() (string, http.Cookie, error) {
 }
 
 func (u *UseCase) Introspect(ctx context.Context, accessToken string) (*sso_service_client.IntrospectResponse, error) {
-	introspect, err := u.client.Introspect(ctx, u.addr+tokenIntrospectURL, accessToken)
+	introspect, err := u.client.Introspect(ctx, tokenIntrospectURL, accessToken)
 	if err != nil {
 		return nil, fmt.Errorf("OauthClient.Introspect: %w", err)
 	}
@@ -74,52 +72,4 @@ func (u *UseCase) Callback(ctx context.Context, code string) (*oauth2.Token, *ss
 	log.Println("client_id", introspectResponse.ClientID)
 	log.Println("active", introspectResponse.Active)
 	return token, introspectResponse, nil
-}
-
-func processCookies(w http.ResponseWriter, token *oauth2.Token) {
-	cookieAccess := &http.Cookie{
-		Name:     "Access-Token",
-		Value:    token.AccessToken,
-		Secure:   false,
-		HttpOnly: false,
-		SameSite: http.SameSiteLaxMode,
-	}
-	cookieRefresh := &http.Cookie{
-		Name:     "Refresh-Token",
-		Value:    token.RefreshToken,
-		Secure:   false,
-		HttpOnly: false,
-		SameSite: http.SameSiteLaxMode,
-	}
-	http.SetCookie(w, cookieAccess)
-	http.SetCookie(w, cookieRefresh)
-}
-
-type (
-	CallbackRequest struct {
-		Code  string
-		State state.State
-	}
-)
-
-func (r *CallbackRequest) Validate(req *http.Request) error {
-	code := req.FormValue("code")
-	st := req.FormValue("state")
-
-	if code == "" {
-		return errors.New("authorization code is empty")
-	}
-	if st == "" {
-		return errors.New("state is empty")
-	}
-
-	stateModel, err := state.New(st)
-	if err != nil {
-		return err
-	}
-
-	r.Code = code
-	r.State = stateModel
-
-	return nil
 }
