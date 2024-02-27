@@ -9,7 +9,7 @@ import (
 
 type (
 	ClientCredentials interface {
-		Introspect(ctx context.Context, accessToken string) error
+		Introspect(ctx context.Context, accessToken string) (*sso_service_client.IntrospectResponse, error)
 	}
 
 	OauthOidc interface {
