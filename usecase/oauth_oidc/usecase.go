@@ -42,6 +42,7 @@ func (u *UseCase) Login() (string, http.Cookie, error) {
 	if err != nil {
 		return "", http.Cookie{}, fmt.Errorf("state.Generate: %w", err)
 	}
+	log.Println("state:", string(st))
 
 	cookie := u.cookie.GenerateCookie(string(st))
 	loginUrl := u.oauth2Config.AuthCodeURL(string(st))
