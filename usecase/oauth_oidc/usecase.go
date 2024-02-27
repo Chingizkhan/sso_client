@@ -7,7 +7,6 @@ import (
 	"github.com/Chingizkhan/sso_client/pkg/state"
 	"github.com/Chingizkhan/sso_client/service/sso_service_client"
 	"golang.org/x/oauth2"
-	"log"
 	"net/http"
 )
 
@@ -40,7 +39,6 @@ func (u *UseCase) Login() (string, http.Cookie, error) {
 	if err != nil {
 		return "", http.Cookie{}, fmt.Errorf("state.Generate: %w", err)
 	}
-	log.Println("state:", string(st))
 
 	cookie := u.cookie.GenerateCookie(string(st))
 	loginUrl := u.oauth2Config.AuthCodeURL(string(st))
@@ -52,8 +50,6 @@ func (u *UseCase) Introspect(ctx context.Context, accessToken string) (*sso_serv
 	if err != nil {
 		return nil, fmt.Errorf("OauthClient.Introspect: %w", err)
 	}
-
-	log.Println("oauth_oidc introspect response: ", introspect)
 
 	return introspect, nil
 }
@@ -69,7 +65,5 @@ func (u *UseCase) Callback(ctx context.Context, code string) (*oauth2.Token, *ss
 		return nil, nil, errors.New("can not introspect response: " + err.Error())
 	}
 
-	log.Println("client_id", introspectResponse.ClientID)
-	log.Println("active", introspectResponse.Active)
 	return token, introspectResponse, nil
 }

@@ -12,13 +12,6 @@ import (
 	"time"
 )
 
-//
-//var OauthClient *OauthServiceClient
-//
-//func init() {
-//	OauthClient = New(time.Second*15, config.Cfg.OauthService.Addr)
-//}
-
 type (
 	Client interface {
 		Introspect(ctx context.Context, path, accessToken string) (*IntrospectResponse, error)
