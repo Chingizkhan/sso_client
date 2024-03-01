@@ -1,6 +1,7 @@
 package sso_client
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/Chingizkhan/sso_client/pkg/api_util"
@@ -52,6 +53,8 @@ func New(config Config) *SsoClient {
 	}
 }
 
+const PayloadKey = "payload_key"
+
 func (c *SsoClient) AuthOauth2(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		// check token exists
@@ -84,6 +87,9 @@ func (c *SsoClient) AuthOauth2(next http.Handler) http.Handler {
 			api_util.RenderErrorResponse(w, "token is inactive", http.StatusUnauthorized)
 			return
 		}
+
+		ctx := context.WithValue(r.Context(), PayloadKey, introspectResponse.Sub)
+		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)
