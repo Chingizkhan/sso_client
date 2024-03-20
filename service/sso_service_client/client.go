@@ -37,6 +37,8 @@ func (s *OauthServiceClient) Introspect(ctx context.Context, path, accessToken s
 		return nil, fmt.Errorf("can not create http.Request: %w", err)
 	}
 
+	log.Println("s.path+path:", s.path+path)
+
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("%s %s", token.TypeBearer, accessToken))
 
