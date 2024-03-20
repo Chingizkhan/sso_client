@@ -7,6 +7,7 @@ import (
 	"github.com/Chingizkhan/sso_client/pkg/token"
 	"github.com/pkg/errors"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -71,6 +72,7 @@ func (s *OauthServiceClient) Introspect(ctx context.Context, path, accessToken s
 
 func getResponse(body []byte, res any) error {
 	err := json.Unmarshal(body, res)
+	log.Println("body:", string(body))
 	if err != nil {
 		return fmt.Errorf("json.Unmarshal: %w", err)
 	}
