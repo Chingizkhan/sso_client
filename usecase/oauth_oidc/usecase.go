@@ -7,7 +7,6 @@ import (
 	"github.com/Chingizkhan/sso_client/pkg/state"
 	"github.com/Chingizkhan/sso_client/service/sso_service_client"
 	"golang.org/x/oauth2"
-	"log"
 	"net/http"
 )
 
@@ -43,7 +42,7 @@ func (u *UseCase) Login() (string, http.Cookie, error) {
 
 	cookie := u.cookie.GenerateCookie(string(st))
 	loginUrl := u.oauth2Config.AuthCodeURL(string(st))
-	log.Println("loginUrl:", loginUrl)
+
 	return loginUrl, cookie, nil
 }
 
