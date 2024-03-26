@@ -22,6 +22,7 @@ type (
 		AuthOauth2(next http.Handler) http.Handler
 		AuthClientCredentials(next http.Handler) http.Handler
 		ProcessCallback(r *http.Request) (*oauth2.Token, *sso_service_client.IntrospectResponse, error)
+		ClientCredentialsAuthenticate(ctx context.Context, in *sso_service_client.AuthRequest) (*sso_service_client.AuthResponse, error)
 	}
 
 	SsoClient struct {
@@ -117,6 +118,15 @@ func (c *SsoClient) AuthClientCredentials(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)
+}
+
+func (c *SsoClient) ClientCredentialsAuthenticate(ctx context.Context, in *sso_service_client.AuthRequest) (*sso_service_client.AuthResponse, error) {
+	auth, err := c.clientCredentials.Auth(ctx, in)
+	if err != nil {
+		return nil, fmt.Errorf("c.clientCredentials.Auth: %w", err)
+	}
+
+	return auth, nil
 }
 
 func (c *SsoClient) ProcessCallback(r *http.Request) (*oauth2.Token, *sso_service_client.IntrospectResponse, error) {
