@@ -53,6 +53,15 @@ func (s *OauthServiceClient) Auth(ctx context.Context, path string, in *AuthRequ
 	}
 	defer resp.Body.Close()
 
+	body, err := io.ReadAll(resp.Body)
+	if strings.Contains(string(body), "error") {
+		var res ErrorResponse
+		if err = getResponse(body, &res); err != nil {
+			return nil, fmt.Errorf("get 'error' response: %w", err)
+		}
+		return nil, errors.New(res.Error)
+	}
+
 	var response AuthResponse
 	accessToken := resp.Header.Get("Access-Token")
 	if accessToken == "" {
