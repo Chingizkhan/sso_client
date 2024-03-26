@@ -10,6 +10,15 @@ type (
 		TokenUse string `json:"token_use"`
 	}
 
+	AuthRequest struct {
+		ClientID     string `json:"client_id"`
+		ClientSecret string `json:"client_secret"`
+	}
+
+	AuthResponse struct {
+		AccessToken string `json:"access_token"`
+	}
+
 	ErrorResponse struct {
 		Error string `json:"error"`
 	}

@@ -1,6 +1,7 @@
 package sso_service_client
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -16,6 +17,7 @@ import (
 type (
 	Client interface {
 		Introspect(ctx context.Context, path, accessToken string) (*IntrospectResponse, error)
+		Auth(ctx context.Context, path string, req *AuthRequest) (*AuthResponse, error)
 	}
 
 	OauthServiceClient struct {
@@ -29,6 +31,37 @@ func New(timeout time.Duration, path string) *OauthServiceClient {
 		client: &http.Client{Timeout: timeout},
 		path:   path,
 	}
+}
+
+func (s *OauthServiceClient) Auth(ctx context.Context, path string, in *AuthRequest) (*AuthResponse, error) {
+	js, err := json.Marshal(in)
+	if err != nil {
+		return nil, fmt.Errorf("unable to marshal auth data: %w", err)
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.path+path, bytes.NewBuffer(js))
+	if err != nil {
+		return nil, fmt.Errorf("can not create http.Request: %w", err)
+	}
+
+	log.Println("s.path+path:", s.path+path)
+
+	req.Header.Add("Accept", "application/json")
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("http.Client.Do: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var response AuthResponse
+	accessToken := resp.Header.Get("Access-Token")
+	if accessToken == "" {
+		return nil, fmt.Errorf("empty access token")
+	}
+
+	response.AccessToken = accessToken
+
+	return &response, nil
 }
 
 func (s *OauthServiceClient) Introspect(ctx context.Context, path, accessToken string) (*IntrospectResponse, error) {

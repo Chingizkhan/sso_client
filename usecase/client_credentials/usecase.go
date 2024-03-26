@@ -8,6 +8,7 @@ import (
 
 const (
 	tokenIntrospectURL = "/client-credentials/token/introspect"
+	tokenAuthURL       = "/client-credentials/auth"
 )
 
 type (
@@ -24,6 +25,15 @@ func (u *UseCase) Introspect(ctx context.Context, accessToken string) (*sso_serv
 	introspect, err := u.client.Introspect(ctx, tokenIntrospectURL, accessToken)
 	if err != nil {
 		return nil, fmt.Errorf("OauthClient.Introspect: %w", err)
+	}
+
+	return introspect, nil
+}
+
+func (u *UseCase) Auth(ctx context.Context, in *sso_service_client.AuthRequest) (*sso_service_client.AuthResponse, error) {
+	introspect, err := u.client.Auth(ctx, tokenAuthURL, in)
+	if err != nil {
+		return nil, fmt.Errorf("OauthClient.Auth: %w", err)
 	}
 
 	return introspect, nil
