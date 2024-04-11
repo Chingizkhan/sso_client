@@ -8,7 +8,6 @@ import (
 	"github.com/Chingizkhan/sso_client/pkg/token"
 	"github.com/pkg/errors"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -43,8 +42,6 @@ func (s *OauthServiceClient) Auth(ctx context.Context, path string, in *AuthRequ
 		return nil, fmt.Errorf("can not create http.Request: %w", err)
 	}
 
-	log.Println("s.path+path:", s.path+path)
-
 	req.Header.Add("Accept", "application/json")
 
 	resp, err := s.client.Do(req)
@@ -78,8 +75,6 @@ func (s *OauthServiceClient) Introspect(ctx context.Context, path, accessToken s
 	if err != nil {
 		return nil, fmt.Errorf("can not create http.Request: %w", err)
 	}
-
-	log.Println("s.path+path:", s.path+path)
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("%s %s", token.TypeBearer, accessToken))
@@ -116,7 +111,6 @@ func (s *OauthServiceClient) Introspect(ctx context.Context, path, accessToken s
 
 func getResponse(body []byte, res any) error {
 	err := json.Unmarshal(body, res)
-	log.Println("body:", string(body))
 	if err != nil {
 		return fmt.Errorf("json.Unmarshal: %w", err)
 	}
