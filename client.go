@@ -54,7 +54,7 @@ func New(config Config) *SsoClient {
 	}
 }
 
-const PayloadKey = "payload_key"
+const PayloadKey = "client_creds"
 
 func (c *SsoClient) AuthOauth2(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
@@ -115,6 +115,8 @@ func (c *SsoClient) AuthClientCredentials(next http.Handler) http.Handler {
 			api_util.RenderErrorResponse(w, "token is inactive", http.StatusUnauthorized)
 			return
 		}
+		ctx := context.WithValue(r.Context(), PayloadKey, introspectResponse.Sub)
+		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(fn)
