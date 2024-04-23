@@ -62,7 +62,7 @@ func (s *OauthServiceClient) Auth(ctx context.Context, path string, in *AuthRequ
 	var response AuthResponse
 	accessToken := resp.Header.Get("Access-Token")
 	if accessToken == "" {
-		return nil, fmt.Errorf("empty access token")
+		return nil, fmt.Errorf("unable to get access token: %s", body)
 	}
 
 	response.AccessToken = accessToken
